@@ -37,6 +37,10 @@ export class DataPurgeModule implements Module {
           .replace(/<!--[\s\S]*?-->/g, "")
           // Keep only one new line needed by markdown-it package to convert to html
           .replace(/\n\s*\n/g, "\n")
+          // Remove inline footnote markers (e.g., [^01^])
+          .replace(/\[\^.+?\^\]/g, "")
+          // Remove footnote definitions (e.g., [^01^]: This is a footnote definition)
+          .replace(/\[\^.+?\^\]:.*(\n\s+.*)*/g, "")
           .trim();
 
         const reviewComment = comment as GitHubPullRequestReviewComment;
